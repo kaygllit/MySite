@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GLLIT TV – Open Your Pack</title>
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background-color: #CB9DF0;
+      font-family: 'berk', sans-serif;
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: 'berk', sans-serif;
+      padding: 10px 20px;
+      background-color: #ff77c6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #ff52b7;
+    }
+
+    #support-id {
+        position: fixed;
+        bottom: 10px;
+        left: 20px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: 'berk', sans-serif;
+        }
+
+
+    #card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .card {
+    background-color: #fff;
+    color: #000;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    width: 180px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    }
+
+
+
+    .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    }
+
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .rarity {
+      font-weight: bold;
+    }
+
+    .rarity.common    { color: #aaa; }
+    .rarity.rare      { color: #4287f5; }
+    .rarity.epic      { color: #c97fff; }
+    .rarity.legendary { color: #ffcc00; }
+    .rarity.mythic    {
+      color: #ffa600;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ffd700; }
+      to { text-shadow: 0 0 15px #ff9900; }
+    }
+    .card.mythic-border {
+        position: relative;
+        z-index: 1;
+        border: 2px solid #ffda6b;
+        animation: mythic-glow-box 4s ease infinite;
+        box-shadow: 0 0 15px 4px #ffda6b;
+        }
+
+    @keyframes mythic-glow-box {
+        0% {
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ff9900, 0 0 30px #ffd700;
+            border-color: #ffd700;
+        }
+        50% {
+            box-shadow: 0 0 20px #ffcc33, 0 0 40px #ffaa00, 0 0 60px #ffd700;
+            border-color: #ff9900;
+        }
+        100% {
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ff9900, 0 0 30px #ffd700;
+            border-color: #ffd700;
+        }
+        }
+
+
+    .card-name-box {
+    background-color: #ff77c6;
+    color: white;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    display: inline-block;
+    }
+    .card-name-box.mythic {
+    background: linear-gradient(270deg, #ffd700, #ff9900, #ffd700);
+    background-size: 400% 400%;
+    animation: mythic-glow 4s ease infinite;
+    color: #fff;
+    border: 2px solid #fff8b0;
+    box-shadow: 0 0 10px #ffd700;
+    z-index: 2;
+    position: relative; /* only if needed */
+    }
+ 
+        
+    @keyframes mythic-glow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+    }
+
+    .card-details {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #444;
+    }
+
+    .quantity-badge {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background-color: #ff77c6;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .card-inner {
+        opacity: 0;
+        transform: scale(0.7) rotate(-5deg);
+        }
+
+    .card-inner.reveal {
+    animation: revealCard 0.6s ease-out forwards;
+    }
+
+        @keyframes revealCard {
+        to {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        }
+    .reveal {
+        animation: revealCard 0.6s ease-out forwards;
+        }
+
+     
+    /* .card {
+        opacity: 1;
+        transform: scale(0.7) rotate(-5deg);
+        animation: revealCard 0.6s ease-out forwards;
+        } */
+
+
+    #pack-animation {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 150px;
+        height: 150px;
+        margin-top: -75px;
+        margin-left: -75px;
+        background-color: #ff77c6;
+        border-radius: 50%;
+        z-index: 999;
+        display: none;
+        animation: pop 1.2s ease-out;
+        box-shadow: 0 0 30px #ff77c6;
+        }
+
+        @keyframes pop {
+        0%   { transform: scale(0.5); opacity: 0; }
+        50%  { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(1); opacity: 0; }
+        }
+
+
+
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <h1>🎁 Open a Photo Card Pack</h1>
+  <div id="message"></div>
+  <p id="packsLeft"></p>
+  <button id="openBtn" disabled>Open Pack</button>
+
+  <div id="card-container"></div>
+  <div id="pack-animation"></div>
+
+  
+
+  <div style="margin-top: 30px;">
+    <button onclick="window.location.href='cardcollection.html'">📂 View Collection</button>
+  </div>
+
+  <div id="auth-section">
+    <button id="googleSignInBtn">🔐 Sign in with Google</button>
+    <p id="user-info" style="display:none;">Signed in as <span id="user-name"></span></p>
+  </div>
+  <button id="logoutBtn" style="display: none;">🚪 Log Out</button>
+
+  <div style="margin-top: 30px;">
+    <input type="text" id="redeemInput" placeholder="Enter Code" />
+    <button onclick="redeemCode()">🎟️ Redeem Code</button>
+    <p id="codeMessage"></p>
+  </div>
+  <p id="redeemMessage" style="margin-top: 15px; font-size: 18px; color: #fff;"></p>
+  <div id="support-id" style="display:none;"></div>
+
+  <!-- ...keep your <head> and <style> as-is, no change needed... -->
+<!-- At the end of <body>, replace your current script tag with this: -->
+
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1C-Jr6CAI0zd4jUi0chDur6CPVUoAxeo",
+      authDomain: "gllittv.firebaseapp.com",
+      projectId: "gllittv",
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  
+    let currentUserId = null;
+    let gameConfig = {
+      packSize: 5,
+      dailyPacks: 1,
+      rarityWeights: {
+        mythic: 1,
+        legendary: 5,
+        epic: 10,
+        rare: 25,
+        common: 59
+      }
+    };
+  
+    async function loadGameConfig() {
+      try {
+        const doc = await db.collection("settings").doc("gameConfig").get();
+        if (doc.exists) {
+          gameConfig = { ...gameConfig, ...doc.data() };
+          console.log("Game config loaded:", gameConfig);
+        }
+      } catch (err) {
+        console.warn("Could not load game config:", err);
+      }
+    }
+  
+    function getToday() {
+      return new Date().toDateString();
+    }
+  
+    async function checkAndIncrementPackCount() {
+      const ref = db.collection("users").doc(currentUserId);
+      const doc = await ref.get();
+      const data = doc.data() || {};
+      const today = getToday();
+  
+      if (data.lastIncrementDate !== today) {
+        const newCount = (data.packCount || 0) + (gameConfig.dailyPacks || 1);
+        await ref.set({
+          packCount: newCount,
+          lastIncrementDate: today
+        }, { merge: true });
+        return newCount;
+      }
+      return data.packCount || 0;
+    }
+    async function openPack() {
+        const userRef = db.collection("users").doc(currentUserId);
+
+        try {
+            const result = await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            const data = userDoc.data() || {};
+            const packCount = data.packCount || 0;
+
+            if (packCount <= 0) {
+                throw new Error("No packs left");
+            }
+
+            // Fetch pullable cards
+            const cardSnapshot = await db.collection("cards").where("pullable", "==", true).get();
+            const cards = cardSnapshot.docs.map(doc => doc.data());
+
+            const rarityChances = Object.entries(gameConfig.rarityWeights).map(([rarity, weight]) => ({ rarity, weight }));
+            const rarityPools = {};
+            rarityChances.forEach(({ rarity }) => {
+                rarityPools[rarity] = cards.filter(c => c.rarity === rarity);
+            });
+
+            function getRandomRarity() {
+                let roll = Math.random() * 100;
+                for (const { rarity, weight } of rarityChances) {
+                if (roll < weight) return rarity;
+                roll -= weight;
+                }
+                return "common";
+            }
+
+            const pulled = [];
+            let tries = 0;
+            while (pulled.length < gameConfig.packSize && tries < 50) {
+                const rarity = getRandomRarity();
+                const pool = rarityPools[rarity];
+                if (!pool || pool.length === 0) {
+                tries++;
+                continue;
+                }
+                const card = pool[Math.floor(Math.random() * pool.length)];
+                pulled.push({ ...card });
+                tries++;
+            }
+
+            // Update collection
+            const collection = data.collection || {};
+            pulled.forEach(card => {
+                const key = `${card.name}::${card.set}::${card.rarity}::${card.image}`;
+                collection[key] = collection[key]
+                ? { ...card, count: collection[key].count + 1 }
+                : { ...card, count: 1 };
+            });
+
+            // Save updates
+            transaction.set(userRef, {
+                packCount: packCount - 1,
+                collection: collection
+            }, { merge: true });
+
+            // Return pulled cards + new pack count
+            return {
+                pulled,
+                newPackCount: packCount - 1
+            };
+            });
+
+            // OUTSIDE the transaction: update UI
+            document.getElementById("packsLeft").textContent = `📦 Packs Left: ${result.newPackCount}`;
+            displayCards(result.pulled);
+
+        } catch (err) {
+            console.warn("Pack open failed:", err.message);
+            document.getElementById("message").textContent = err.message === "No packs left"
+            ? "No packs left today! Come back tomorrow ✨"
+            : "⚠️ Something went wrong opening the pack.";
+        }
+        }
+
+
+  
+    function displayCards(cards) {
+    const container = document.getElementById("card-container");
+    container.innerHTML = "";
+    document.getElementById("message").textContent = `You got ${cards.length} card${cards.length > 1 ? "s" : ""}! 🎉`;
+
+    cards.forEach((card, index) => {
+        const cardEl = document.createElement("div");
+        cardEl.className = "card";
+        if (card.rarity?.toLowerCase() === "mythic") {
+        cardEl.classList.add("mythic-border");
+        }
+
+        const isMythic = card.rarity?.toLowerCase() === "mythic";
+        const nameClass = isMythic ? "card-name-box mythic" : "card-name-box";
+
+        cardEl.innerHTML = `
+       
+        <div class="card-inner reveal" style="animation-delay: ${index * 0.3}s">
+            <img src="${card.image}" alt="${card.name}">
+            <p><span class="${nameClass}">${card.name}</span></p>
+            <div class="card-details">
+            Set: ${card.set}<br>
+            Rarity: <span class="rarity ${card.rarity.toLowerCase()}">${card.rarity}</span>
+            </div>
+        </div>
+        `;
+
+        container.appendChild(cardEl);
+    });
+    }
+
+
+  
+    function generateSupportId() {
+      const prefix = "GLT";
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      return `${prefix}-${randomNum}`;
+    }
+  
+    const provider = new firebase.auth.GoogleAuthProvider();
+    document.getElementById("googleSignInBtn").addEventListener("click", () => {
+      auth.signInWithPopup(provider).catch(console.error);
+    });
+  
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      auth.signOut().then(() => location.reload());
+    });
+  
+    auth.onAuthStateChanged(async (user) => {
+      const supportEl = document.getElementById("support-id");
+  
+      if (user) {
+        await loadGameConfig(); // ✅ Load config before doing anything else
+        currentUserId = user.uid;
+  
+        const userRef = db.collection("users").doc(currentUserId);
+        const doc = await userRef.get();
+        let supportId = doc.data()?.supportId;
+  
+        if (!supportId) {
+          supportId = generateSupportId();
+          await userRef.set({ supportId }, { merge: true });
+        }
+  
+        document.getElementById("user-info").style.display = "block";
+        document.getElementById("user-name").textContent = user.displayName || user.email;
+        document.getElementById("packsLeft").textContent = `📦 Packs Left: ${await checkAndIncrementPackCount()}`;
+        document.getElementById("openBtn").disabled = false;
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("googleSignInBtn").style.display = "none";
+        supportEl.textContent = `🆔 Support ID: ${supportId}`;
+        supportEl.style.display = "block";
+      } else {
+        currentUserId = null;
+        document.getElementById("user-info").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("openBtn").disabled = true;
+        document.getElementById("googleSignInBtn").style.display = "inline-block";
+        document.getElementById("packsLeft").textContent = "";
+        supportEl.textContent = "";
+        supportEl.style.display = "none";
+      }
+    });
+  
+    document.getElementById("openBtn").addEventListener("click", openPack);
+  
+    async function redeemCode() {
+        const input = document.getElementById("redeemInput");
+        const codeRaw = input?.value;
+        const redeemMessage = document.getElementById("redeemMessage");
+
+        if (!codeRaw) {
+            redeemMessage.textContent = "⚠️ Please enter a code.";
+            redeemMessage.style.color = "#ffcc00";
+            return;
+        }
+
+        const code = codeRaw.toUpperCase().trim();
+
+        try {
+            const codeRef = db.collection("codes").doc(code);
+            const codeSnap = await codeRef.get();
+
+            if (!codeSnap.exists) {
+            redeemMessage.textContent = "❌ This code does not exist.";
+            redeemMessage.style.color = "#ff4444";
+            return;
+            }
+
+            const codeData = codeSnap.data();
+            const reward = Number(codeData.reward || 1);
+            const usesLeft = Number(codeData.usesLeft || 0);
+            const maxPerUser = Number(codeData.maxPerUser || 1);
+
+            const userRef = db.collection("users").doc(currentUserId);
+            const userSnap = await userRef.get();
+            const userData = userSnap.data() || {};
+            const redeemedCodes = userData.redeemedCodes || {};
+            const timesUsed = redeemedCodes[code] || 0;
+
+            if (usesLeft <= 0) {
+            redeemMessage.textContent = "⚠️ This code has already been used up.";
+            redeemMessage.style.color = "#ffcc00";
+            return;
+            }
+
+            if (timesUsed >= maxPerUser) {
+            redeemMessage.textContent = "🔒 You've already redeemed this code.";
+            redeemMessage.style.color = "#ffaa00";
+            return;
+            }
+
+            const newPackCount = (Number(userData.packCount) || 0) + reward;
+            redeemedCodes[code] = timesUsed + 1;
+
+            await Promise.all([
+            userRef.set({
+                packCount: newPackCount,
+                redeemedCodes: redeemedCodes
+            }, { merge: true }),
+
+            codeRef.update({
+                usesLeft: usesLeft - 1
+            })
+            ]);
+
+            document.getElementById("packsLeft").textContent = `📦 Packs Left: ${newPackCount}`;
+            redeemMessage.textContent = `✅ Code redeemed! You received ${reward} pack${reward > 1 ? "s" : ""}.`;
+            redeemMessage.style.color = "#00ff99";
+            input.value = "";
+        } catch (err) {
+            console.error("Error redeeming code:", err);
+            redeemMessage.textContent = "❌ An error occurred while redeeming the code.";
+            redeemMessage.style.color = "#ff4444";
+        }
+        }
+
+        
+
+  </script>
+  
+</body>
+</html>

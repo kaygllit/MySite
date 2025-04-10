@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GLLIT TV – Your Collection</title>
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background-color: #CB9DF0;
+      font-family: 'berk', sans-serif;
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+    }
+
+    #logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 100px;
+      cursor: pointer;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    #card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .card {
+      background-color: #fff;
+      color: #000;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px;
+      width: 180px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card-name-box {
+    background-color: #ff77c6;
+    color: white;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    display: inline-block;
+    }
+
+    .card-name-box.mythic {
+    background: linear-gradient(270deg, #ffd700, #ff9900, #ffd700);
+    background-size: 400% 400%;
+    animation: mythic-glow 4s ease infinite;
+    color: #fff;
+    border: 2px solid #fff8b0;
+    box-shadow: 0 0 10px #ffd700;
+    }
+
+    @keyframes mythic-glow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+    }
+
+    .card-details {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #444;
+    }
+
+
+    .rarity {
+      font-weight: bold;
+    }
+
+    .rarity.common { color: #aaa; }
+    .rarity.rare { color: #4287f5; }
+    .rarity.epic { color: #c97fff; }
+    .rarity.legendary { color: #ffcc00; }
+    .rarity.mythic {
+      color: #ffa600;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ffd700; }
+      to { text-shadow: 0 0 15px #ff9900; }
+    }
+
+    .card.mythic-border {
+        position: relative;
+        z-index: 1;
+        border: 2px solid #ffda6b;
+        animation: mythic-glow-box 4s ease infinite;
+        box-shadow: 0 0 15px 4px #ffda6b;
+        }
+
+        @keyframes mythic-glow-box {
+        0% {
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ff9900, 0 0 30px #ffd700;
+            border-color: #ffd700;
+        }
+        50% {
+            box-shadow: 0 0 20px #ffcc33, 0 0 40px #ffaa00, 0 0 60px #ffd700;
+            border-color: #ff9900;
+        }
+        100% {
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ff9900, 0 0 30px #ffd700;
+            border-color: #ffd700;
+        }
+        }
+
+
+    .quantity-badge {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background-color: #ff77c6;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button {
+      font-family: 'berk', sans-serif;
+      padding: 10px 20px;
+      background-color: #ff77c6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+    }
+
+    button:hover {
+      background-color: #ff52b7;
+    }
+
+    #sort-wrapper {
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'berk', sans-serif;
+    }
+
+    #sortSelect {
+      padding: 8px 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      background-color: #ff77c6;
+      color: white;
+      cursor: pointer;
+    }
+
+    #sortSelect:focus {
+      outline: none;
+      box-shadow: 0 0 5px #ffb8e0;
+    }
+
+    label {
+      font-size: 18px;
+    }
+
+    #support-id {
+      position: fixed;
+      bottom: 10px;
+      left: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      font-family: 'berk', sans-serif;
+    }
+  </style>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <a href="home.html"><img id="logo" src="tv-light.png" alt="GLLIT TV Logo"></a>
+  <h1>📂 Your GLLIT Collection</h1>
+
+  <div id="sort-wrapper">
+    <label for="sortSelect">Sort By:</label>
+    <select id="sortSelect">
+      <option value="name-asc">Name (A–Z)</option>
+      <option value="name-desc">Name (Z–A)</option>
+      <option value="rarity-high">Rarity (Mythic → Common)</option>
+      <option value="rarity-low">Rarity (Common → Mythic)</option>
+      <option value="quantity-desc">Quantity (Most → Least)</option>
+      <option value="quantity-asc">Quantity (Least → Most)</option>
+    </select>
+  
+    <input type="text" id="searchInput" placeholder="Search cards..." style="padding: 8px 12px; border-radius: 6px; border: none; font-size: 16px; width: 200px;">
+  </div>
+  
+  
+   
+
+  <div id="card-container">Loading your cards...</div>
+  <div id="auth-section" style="margin-top: 30px;">
+    <button id="googleSignInBtn" style="display: none;">🔓 Sign in to view your collection</button>
+
+  </div>
+  <div id="pagination-controls" style="margin-top: 20px;"></div>
+
+  <button id="logoutBtn" style="display: none;">🚪 Log Out</button>
+
+  
+  <button onclick="window.location.href='openfirebase.html'">🏱 Open a Pack</button>
+  <p id="support-id" style="margin-top: 10px;"></p>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1C-Jr6CAI0zd4jUi0chDur6CPVUoAxeo",
+      authDomain: "gllittv.firebaseapp.com",
+      databaseURL: "https://gllittv-default-rtdb.firebaseio.com",
+      projectId: "gllittv",
+      storageBucket: "gllittv.firebasestorage.app",
+      messagingSenderId: "498598938643",
+      appId: "1:498598938643:web:4c656e86c8d417cd2c97e6",
+      measurementId: "G-QGLFBX6NY4"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let collectionLoaded = false;
+
+    function generateSupportId() {
+        const prefix = "GLT";
+        const randomNum = Math.floor(100000 + Math.random() * 900000); // 6 digits
+        return `${prefix}-${randomNum}`;
+        }
+
+
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentUserId = user.uid;
+            document.getElementById("logoutBtn").style.display = "inline-block";
+
+            const signInBtn = document.getElementById("googleSignInBtn");
+            if (signInBtn) signInBtn.style.display = "none";
+
+            const userRef = db.collection("users").doc(currentUserId);
+            const doc = await userRef.get();
+            let supportId = doc.data()?.supportId;
+
+            // Generate and save support ID if missing
+            if (!supportId) {
+            supportId = generateSupportId();
+            await userRef.set({ supportId }, { merge: true });
+            }
+
+            // Show Support ID in UI
+            document.getElementById("support-id").textContent = `🆔 Support ID: ${supportId}`;
+
+            if (!collectionLoaded) {
+            const userDoc = await userRef.get();
+            const collection = userDoc.data()?.collection || {};
+            renderCollection(collection);
+            collectionLoaded = true;
+            }
+
+        } else {
+            currentUserId = null;
+            document.getElementById("logoutBtn").style.display = "none";
+            const signInBtn = document.getElementById("googleSignInBtn");
+            if (signInBtn) signInBtn.style.display = "inline-block";
+            document.getElementById("support-id").textContent = "";
+        }
+        });
+
+        
+
+
+
+        function renderCollection(cards) {
+        const container = document.getElementById("card-container");
+        container.innerHTML = "";
+
+        const sortValue = document.getElementById("sortSelect").value;
+        const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
+
+        const rarityOrder = {
+            "mythic": 4,
+            "legendary": 3,
+            "epic": 2,
+            "rare": 1,
+            "common": 0
+        };
+
+        let cardArray = Object.keys(cards).map(key => cards[key]);
+
+        // Filter by search
+        if (searchValue) {
+            cardArray = cardArray.filter(card =>
+            card.name.toLowerCase().includes(searchValue)
+            );
+        }
+
+        // Sorting logic
+        cardArray.sort((a, b) => {
+            switch (sortValue) {
+            case "name-asc":
+                return a.name.localeCompare(b.name);
+            case "name-desc":
+                return b.name.localeCompare(a.name);
+            case "rarity-high":
+                return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+            case "rarity-low":
+                return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+            case "quantity-desc":
+                return (b.count || 0) - (a.count || 0);
+            case "quantity-asc":
+                return (a.count || 0) - (b.count || 0);
+            default:
+                return 0;
+            }
+        });
+
+        if (cardArray.length === 0) {
+            container.innerHTML = "<p>You haven't collected any cards yet!</p>";
+            return;
+        }
+
+        cardArray.forEach(card => {
+            const cardEl = document.createElement("div");
+            cardEl.className = "card";
+            if (card.rarity?.toLowerCase() === "mythic") {
+            cardEl.classList.add("mythic-border");
+            }
+
+            const isMythic = card.rarity?.toLowerCase() === "mythic";
+            const nameClass = isMythic ? "card-name-box mythic" : "card-name-box";
+
+            cardEl.innerHTML = `
+            <div class="quantity-badge">x${card.count || 1}</div>
+            <img src="${card.image}" alt="${card.name}">
+            <p><span class="${nameClass}">${card.name}</span></p>
+            <div class="card-details">
+                Set: ${card.set}<br>
+                Rarity: <span class="rarity ${card.rarity.toLowerCase()}">${card.rarity}</span>
+            </div>
+            `;
+
+            container.appendChild(cardEl);
+        });
+        }
+
+        document.getElementById("searchInput").addEventListener("input", async () => {
+        const userDoc = await db.collection("users").doc(currentUserId).get();
+        const collection = userDoc.data()?.collection || {};
+        renderCollection(collection);
+        });
+
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        auth.signOut().then(() => {
+            location.reload(); // Or redirect to login or home page
+        });
+        });
+
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+        document.getElementById("googleSignInBtn").addEventListener("click", () => {
+        auth.signInWithPopup(provider)
+            .then(result => location.reload())
+            .catch(err => console.error("Sign-in error:", err));
+        });
+
+        document.getElementById("sortSelect").addEventListener("change", async () => {
+        const userDoc = await db.collection("users").doc(currentUserId).get();
+        const collection = userDoc.data()?.collection || {};
+        renderCollection(collection);
+        });
+
+
+  </script>
+</body>
+</html>

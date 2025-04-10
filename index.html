@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ILLITville</title>
+
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'berk', sans-serif;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    .banner {
+      width: 100%;
+      height: 300px;
+      background-image: url('iv/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .logo {
+      width: 250px;
+      max-width: 90%;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #fff;
+      margin-top: 10px;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    /* NAV BAR */
+    .navbar {
+      width: 100%;
+      height: 70px;
+      background-image: url('iv/starpattern1.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-items {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 40px;
+      height: 100%;
+    }
+
+    .nav-items li {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .nav-items li::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.5;
+      z-index: 0;
+      border-radius: 8px;
+    }
+
+    .nav-items li a,
+    .nav-items li img {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-items li a:not(:has(img)):hover {
+      color: #ff77c6;
+    }
+
+    .nav-items li a:has(img):hover img {
+      transform: scale(1.3);
+      transition: transform 0.2s ease;
+    }
+
+    .nav-items li a img {
+      transition: transform 0.2s ease;
+    }
+
+    .nav-icon {
+      height: 40px;
+      width: auto;
+    }
+
+    /* News Feed */
+    #news-feed {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: left;
+    }
+
+    #news-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .news-item {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      align-items: flex-start;
+    }
+
+    .news-item.reverse .news-media {
+    order: 2;
+    }
+
+    .news-item.reverse .news-text {
+    order: 1;
+    }
+
+    .news-media {
+    flex: 0 0 500px;
+    max-width: 500px;
+    }
+
+    .news-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    }
+
+    .news-video {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    border-radius: 10px;
+    overflow: hidden;
+    }
+
+    .news-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+    }
+
+    .news-text {
+      flex: 1 1 300px;
+      min-width: 300px;
+    }
+
+    .news-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .news-body {
+      font-size: 16px;
+      color: #ccc;
+    }
+
+    @media (max-width: 768px) {
+      .news-item {
+        flex-direction: column !important;
+        align-items: stretch;
+      }
+    }
+
+    .site-footer {
+        margin-top: 60px;
+        padding: 30px 20px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        font-family: 'berk', sans-serif;
+        }
+
+        .footer-divider {
+        height: 2px;
+        background-color: #fff;
+        opacity: 0.2;
+        margin: 0 auto 30px auto;
+        width: 80%;
+        }
+
+        .footer-content a {
+        color: #ff77c6;
+        text-decoration: none;
+        }
+
+        .footer-content a:hover {
+        text-decoration: underline;
+        }
+
+  </style>
+</head>
+<body>
+  <!-- Banner -->
+  <header class="banner">
+    <div class="banner-overlay">
+      <img src="tv.png" alt="ILLITville Logo" class="logo" />
+      <p class="subtitle">Powered by r/ILLIT | Managed by u/Indra-kun & u/BigGamingGamer0</p>
+    </div>
+  </header>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul class="nav-items">
+      <li class="nav-home"><a href="index.html">Home</a></li>
+      <li class="nav-wiki"><a href="wiki.html">Wiki</a></li>
+      <li class="nav-members"><a href="members.html">Members</a></li>
+      <li class="nav-new"><a href="members.html">New GLLIT</a></li>
+      <li class="nav-misc"><a href="misc.html">Misc.</a></li>
+      <li class="nav-tv">
+        <a href="tv.html"><img src="tv-light.png" alt="TV" class="nav-icon" /></a>
+      </li>
+      <li class="nav-card">
+        <a href="cardopen.html"><img src="iv/cardlogo.png" alt="Cards" class="nav-icon" /></a>
+      </li>
+    </ul>
+  </nav>
+
+
+  
+
+  <!-- News Feed -->
+  <section id="news-feed">
+    <h2>📰 Latest News</h2>
+    <div id="news-container">Loading news...</div>
+  </section>
+
+ 
+  
+  <footer class="site-footer">
+    <div class="footer-divider"></div>
+    <div class="footer-content">
+      <p><strong>ILLITville</strong> is a fan-created site dedicated to ILLIT. Powered by r/ILLIT and managed by fans for fans.</p>
+      <!-- <p>📫 Contact us: <a href="mailto:illitville@gmail.com">illitville@gmail.com</a></p> -->
+      <p style="font-size: 12px; opacity: 0.6;">© 2025 ILLITville – All images and content belong to their respective owners.</p>
+    </div>
+  </footer>
+
+</body>
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+        <script>
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSAaMo6wxqBuW5mISE6YE0k0Wpinrza78aD0OD3XtkoWRqlVUCuH9vn_CiL_jZAB6tth63AwtYwaRe-/pub?output=csv';
+
+        let allNews = [];
+        let currentIndex = 0;
+        const BATCH_SIZE = 3;
+
+        async function loadNewsData() {
+            const response = await fetch(SHEET_URL);
+            const csvText = await response.text();
+            const parsed = Papa.parse(csvText, { header: true });
+
+            allNews = parsed.data
+            .filter(item => {
+                const isVisible = String(item.visible || "").trim().toUpperCase() !== "FALSE";
+                return isVisible && item.title && (item.content || item.image || item.video);
+            })
+            .reverse(); // newest first
+
+            document.getElementById('news-container').innerHTML = '';
+            loadNextBatch();
+        }
+
+        function loadNextBatch() {
+            const container = document.getElementById('news-container');
+            const batch = allNews.slice(currentIndex, currentIndex + BATCH_SIZE);
+
+            batch.forEach(item => {
+            const newsItem = document.createElement('div');
+            const isRight = item.imageSide?.trim().toLowerCase() === 'right';
+            newsItem.className = `news-item ${isRight ? 'reverse' : ''}`;
+
+            let mediaHTML = '';
+            if (item.video) {
+                mediaHTML = `
+                <div class="news-video">
+                    <iframe src="${item.video}" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                </div>`;
+            } else if (item.image) {
+                mediaHTML = `
+                <div class="news-image">
+                    <img src="${item.image}" alt="${item.title}" />
+                </div>`;
+            }
+
+            newsItem.innerHTML = `
+                <div class="news-media">${mediaHTML}</div>
+                <div class="news-text">
+                <div class="news-title">${item.title}</div>
+                <div class="news-body">${item.content}</div>
+                </div>`;
+
+            container.appendChild(newsItem);
+            });
+
+            currentIndex += BATCH_SIZE;
+        }
+
+        function handleScroll() {
+            const buffer = 300;
+            if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - buffer)) {
+            loadNextBatch();
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', loadNewsData);
+        </script>
+</html>

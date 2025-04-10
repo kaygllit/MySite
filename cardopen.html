@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ILLITville – Open Your Pack</title>
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background-color: #000;
+      font-family: 'berk', sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* Banner + Logo Overlay */
+    .banner {
+      width: 100%;
+      height: 300px;
+      background-image: url('iv/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .logo {
+      width: 250px;
+      max-width: 90%;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #fff;
+      margin-top: 10px;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      height: 70px;
+      background-image: url('iv/starpattern1.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-items {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+
+    .nav-items li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-items li a,
+    .nav-items li img {
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-items li a:hover {
+      color: #ff77c6;
+    }
+
+    .nav-icon {
+      height: 40px;
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #ff77c6;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: 'berk', sans-serif;
+      padding: 10px 20px;
+      background-color: #ff77c6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #ff52b7;
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'berk', sans-serif;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 30px auto 0 auto;
+    justify-items: center;
+    }
+
+
+    .card {
+    flex: 0 0 180px; /* fixed width */
+    background-color: #333333;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card-name-box {
+      background-color: #ff77c6;
+      color: white;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      display: inline-block;
+    }
+
+    .rarity {
+      font-weight: bold;
+    }
+
+    .rarity.common { color: #aaa; }
+    .rarity.rare { color: #4287f5; }
+    .rarity.epic { color: #c97fff; }
+    .rarity.legendary { color: #ffcc00; }
+    .rarity.mythic {
+      color: #ffa600;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ffd700; }
+      to { text-shadow: 0 0 15px #ff9900; }
+    }
+
+    .card.mythic-border {
+      border: 2px solid #ffda6b;
+      animation: mythic-glow-box 4s ease infinite;
+      box-shadow: 0 0 15px 4px #ffda6b;
+    }
+
+    @keyframes mythic-glow-box {
+      0% { box-shadow: 0 0 10px #ffd700; border-color: #ffd700; }
+      50% { box-shadow: 0 0 20px #ffaa00; border-color: #ff9900; }
+      100% { box-shadow: 0 0 10px #ffd700; border-color: #ffd700; }
+    }
+
+    /* Footer */
+    .site-footer {
+      margin-top: 60px;
+      padding: 30px 20px;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    .footer-divider {
+      height: 2px;
+      background-color: #fff;
+      opacity: 0.2;
+      margin: 0 auto 30px auto;
+      width: 80%;
+    }
+
+    .footer-content a {
+      color: #ff77c6;
+      text-decoration: none;
+    }
+
+    .footer-content a:hover {
+      text-decoration: underline;
+    }
+
+    #pack-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 600px; /* Adjust as needed */
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    display: none;
+    pointer-events: none;
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(0.5); opacity: 0; }
+      50%  { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
+    .card-inner {
+        opacity: 0;
+        transform: scale(0.7) rotate(-5deg);
+        }
+
+        .card-inner.reveal {
+        animation: revealCard 0.5s ease-out forwards;
+        }
+
+        @keyframes revealCard {
+        to {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        }
+
+  </style>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <!-- Banner -->
+  <header class="banner">
+    <div class="banner-overlay">
+      <img src="tv.png" alt="ILLITville Logo" class="logo" />
+      <p class="subtitle">Powered by r/ILLIT | Managed by u/Indra-kun & u/BigGamingGamer0</p>
+    </div>
+  </header>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul class="nav-items">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html">Wiki</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="members.html">New GLLIT</a></li>
+      <li><a href="misc.html">Misc.</a></li>
+      <li><a href="tv.html"><img src="tv-light.png" alt="TV" class="nav-icon" /></a></li>
+      <li><a href="cardopen.html"><img src="iv/cardlogo.png" alt="Cards" class="nav-icon" /></a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Game UI -->
+  <main>
+    <h1>🎁 Open a Photo Card Pack</h1>
+    <div id="message"></div>
+    <p id="packsLeft"></p>
+    <button id="openBtn" disabled>Open Pack</button>
+
+    <div id="card-container"></div>
+    <img id="pack-animation" src="iv/result.gif" alt="Opening Animation" style="display:none;">
+
+
+    <div style="margin-top: 30px;">
+      <button onclick="window.location.href='cardcollection.html'">📂 View Collection</button>
+    </div>
+
+    <div id="auth-section">
+      <button id="googleSignInBtn">🔐 Sign in with Google</button>
+      <p id="user-info" style="display:none;">Signed in as <span id="user-name"></span></p>
+    </div>
+    <button id="logoutBtn" style="display: none;">🚪 Log Out</button>
+
+    <div style="margin-top: 30px;">
+      <input type="text" id="redeemInput" placeholder="Enter Code" />
+      <button onclick="redeemCode()">🎟️ Redeem Code</button>
+    </div>
+
+    <p id="redeemMessage" style="margin-top: 15px; font-size: 18px;"></p>
+    <div id="support-id" style="display:none;"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-divider"></div>
+    <div class="footer-content">
+      <p><strong>ILLITville</strong> is a fan-created site dedicated to ILLIT. Powered by r/ILLIT and managed by fans for fans.</p>
+      <p style="font-size: 12px; opacity: 0.6;">© 2025 ILLITville – All images and content belong to their respective owners.</p>
+    </div>
+  </footer>
+
+  <!-- Game Scripts -->
+  <script>
+    // All your original Firebase + game logic goes here...
+  </script>
+</body>
+</html>
+
+
+
+<script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1C-Jr6CAI0zd4jUi0chDur6CPVUoAxeo",
+      authDomain: "gllittv.firebaseapp.com",
+      projectId: "gllittv",
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  
+    let currentUserId = null;
+    let gameConfig = {
+      packSize: 5,
+      dailyPacks: 1,
+      rarityWeights: {
+        mythic: 1,
+        legendary: 5,
+        epic: 10,
+        rare: 25,
+        common: 59
+      }
+    };
+  
+    async function loadGameConfig() {
+      try {
+        const doc = await db.collection("settings").doc("gameConfig").get();
+        if (doc.exists) {
+          gameConfig = { ...gameConfig, ...doc.data() };
+          console.log("Game config loaded:", gameConfig);
+        }
+      } catch (err) {
+        console.warn("Could not load game config:", err);
+      }
+    }
+    const preload = new Audio("sounds/bloop.mp3");
+    preload.load();
+
+    const raritySoundMap = {
+    mythic: "sounds/woopwoopwoopwoop.mp3",
+    legendary: "sounds/bloop.mp3",
+    epic: "sounds/bloop.mp3",
+    rare: "sounds/bloop.mp3",
+    common: "sounds/bloop.mp3"
+    };
+
+  
+    function getToday() {
+      return new Date().toDateString();
+    }
+  
+    async function checkAndIncrementPackCount() {
+      const ref = db.collection("users").doc(currentUserId);
+      const doc = await ref.get();
+      const data = doc.data() || {};
+      const today = getToday();
+  
+      if (data.lastIncrementDate !== today) {
+        const newCount = (data.packCount || 0) + (gameConfig.dailyPacks || 1);
+        await ref.set({
+          packCount: newCount,
+          lastIncrementDate: today
+        }, { merge: true });
+        return newCount;
+      }
+      return data.packCount || 0;
+    }
+    async function openPack() {
+        const userRef = db.collection("users").doc(currentUserId);
+
+        try {
+            const result = await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            const data = userDoc.data() || {};
+            const packCount = data.packCount || 0;
+
+            if (packCount <= 0) {
+                throw new Error("No packs left");
+            }
+
+            // Fetch pullable cards
+            const cardSnapshot = await db.collection("cards").where("pullable", "==", true).get();
+            const cards = cardSnapshot.docs.map(doc => doc.data());
+
+            const rarityChances = Object.entries(gameConfig.rarityWeights).map(([rarity, weight]) => ({ rarity, weight }));
+            const rarityPools = {};
+            rarityChances.forEach(({ rarity }) => {
+                rarityPools[rarity] = cards.filter(c => c.rarity === rarity);
+            });
+
+            function getRandomRarity() {
+                let roll = Math.random() * 100;
+                for (const { rarity, weight } of rarityChances) {
+                if (roll < weight) return rarity;
+                roll -= weight;
+                }
+                return "common";
+            }
+
+            const pulled = [];
+            let tries = 0;
+            while (pulled.length < gameConfig.packSize && tries < 50) {
+                const rarity = getRandomRarity();
+                const pool = rarityPools[rarity];
+                if (!pool || pool.length === 0) {
+                tries++;
+                continue;
+                }
+                const card = pool[Math.floor(Math.random() * pool.length)];
+                pulled.push({ ...card });
+                tries++;
+            }
+
+            // Update collection
+            const collection = data.collection || {};
+            pulled.forEach(card => {
+                const key = `${card.name}::${card.set}::${card.rarity}::${card.image}`;
+                collection[key] = collection[key]
+                ? { ...card, count: collection[key].count + 1 }
+                : { ...card, count: 1 };
+            });
+
+            // Save updates
+            transaction.set(userRef, {
+                packCount: packCount - 1,
+                collection: collection
+            }, { merge: true });
+
+            // Return pulled cards + new pack count
+            return {
+                pulled,
+                newPackCount: packCount - 1
+            };
+            });
+
+                // OUTSIDE the transaction: update UI
+            const packsText = result.newPackCount > 0
+            ? `📦 Packs Left: ${result.newPackCount}`
+            : "📭 No packs left! Come back tomorrow ✨";
+            document.getElementById("packsLeft").textContent = packsText;
+
+            // 🎉 Trigger animation
+            // 🎬 Show the pack opening GIF animation
+            const animation = document.getElementById("pack-animation");
+            animation.style.display = "block";
+
+            // 🔁 Force restart the gif by replacing src
+            animation.src = "";
+            void animation.offsetWidth; // trigger reflow
+            animation.src = "iv/result.gif";
+
+            // 🕒 Hide after 1.2 seconds (length of gif)
+            setTimeout(() => {
+            animation.style.display = "none";
+            }, 1500); // adjust if your gif is longer
+
+            // 💳 Show the cards
+            displayCards(result.pulled);
+
+
+            } catch (err) {
+                console.warn("Pack open failed:", err.message);
+                document.getElementById("message").textContent = err.message === "No packs left"
+                ? "No packs left today! Come back tomorrow ✨"
+                : "⚠️ Something went wrong opening the pack.";
+            }
+        }
+
+
+  
+        function displayCards(cards) {
+        const container = document.getElementById("card-container");
+        container.innerHTML = "";
+        document.getElementById("message").textContent = `You got ${cards.length} card${cards.length > 1 ? "s" : ""}! 🎉`;
+
+        // Determine highest rarity
+        const rarityRank = ["common", "rare", "epic", "legendary", "mythic"];
+        let highest = "common";
+
+        cards.forEach(card => {
+            const r = card.rarity?.toLowerCase();
+            if (rarityRank.indexOf(r) > rarityRank.indexOf(highest)) {
+            highest = r;
+            }
+        });
+
+        // Play sound once for highest rarity
+        const soundPath = raritySoundMap[highest] || raritySoundMap["common"];
+        const sfx = new Audio(soundPath);
+        sfx.volume = 0.1; // Not too loud
+        sfx.play().catch(e => console.warn("Audio play blocked:", e));
+
+
+        // Now render each card with staggered reveal
+        cards.forEach((card, index) => {
+            const cardEl = document.createElement("div");
+            cardEl.className = "card";
+            if (card.rarity?.toLowerCase() === "mythic") {
+            cardEl.classList.add("mythic-border");
+            }
+
+            const isMythic = card.rarity?.toLowerCase() === "mythic";
+            const nameClass = isMythic ? "card-name-box mythic" : "card-name-box";
+
+            const inner = document.createElement("div");
+            inner.className = "card-inner";
+            inner.innerHTML = `
+            <img src="${card.image}" alt="${card.name}">
+            <p><span class="${nameClass}">${card.name}</span></p>
+            <div class="card-details">
+                Set: ${card.set}<br>
+                Rarity: <span class="rarity ${card.rarity.toLowerCase()}">${card.rarity}</span>
+            </div>
+            `;
+
+            cardEl.appendChild(inner);
+            container.appendChild(cardEl);
+
+            setTimeout(() => {
+            inner.classList.add("reveal");
+            }, index * 300);
+        });
+        }
+
+
+
+  
+    function generateSupportId() {
+      const prefix = "GLT";
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      return `${prefix}-${randomNum}`;
+    }
+  
+    const provider = new firebase.auth.GoogleAuthProvider();
+    document.getElementById("googleSignInBtn").addEventListener("click", () => {
+      auth.signInWithPopup(provider).catch(console.error);
+    });
+  
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      auth.signOut().then(() => location.reload());
+    });
+  
+    auth.onAuthStateChanged(async (user) => {
+      const supportEl = document.getElementById("support-id");
+  
+      if (user) {
+        await loadGameConfig(); // ✅ Load config before doing anything else
+        currentUserId = user.uid;
+  
+        const userRef = db.collection("users").doc(currentUserId);
+        const doc = await userRef.get();
+        let supportId = doc.data()?.supportId;
+  
+        if (!supportId) {
+          supportId = generateSupportId();
+          await userRef.set({ supportId }, { merge: true });
+        }
+  
+        document.getElementById("user-info").style.display = "block";
+        document.getElementById("user-name").textContent = user.displayName || user.email;
+        const count = await checkAndIncrementPackCount();
+        document.getElementById("packsLeft").textContent = count > 0
+        ? `📦 Packs Left: ${count}`
+        : "📭 No packs left! Come back tomorrow ✨";
+
+        document.getElementById("openBtn").disabled = false;
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("googleSignInBtn").style.display = "none";
+        supportEl.textContent = `🆔 Support ID: ${supportId}`;
+        supportEl.style.display = "block";
+      } else {
+        currentUserId = null;
+        document.getElementById("user-info").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "none";
+        document.getElementById("openBtn").disabled = true;
+        document.getElementById("googleSignInBtn").style.display = "inline-block";
+        document.getElementById("packsLeft").textContent = "";
+        supportEl.textContent = "";
+        supportEl.style.display = "none";
+      }
+    });
+  
+    document.getElementById("openBtn").addEventListener("click", openPack);
+  
+    async function redeemCode() {
+        const input = document.getElementById("redeemInput");
+        const codeRaw = input?.value;
+        const redeemMessage = document.getElementById("redeemMessage");
+
+        if (!codeRaw) {
+            redeemMessage.textContent = "⚠️ Please enter a code.";
+            redeemMessage.style.color = "#ffcc00";
+            return;
+        }
+
+        const code = codeRaw.toUpperCase().trim();
+
+        try {
+            const codeRef = db.collection("codes").doc(code);
+            const codeSnap = await codeRef.get();
+
+            if (!codeSnap.exists) {
+            redeemMessage.textContent = "❌ This code does not exist.";
+            redeemMessage.style.color = "#ff4444";
+            return;
+            }
+
+            const codeData = codeSnap.data();
+            const reward = Number(codeData.reward || 1);
+            const usesLeft = Number(codeData.usesLeft || 0);
+            const maxPerUser = Number(codeData.maxPerUser || 1);
+
+            const userRef = db.collection("users").doc(currentUserId);
+            const userSnap = await userRef.get();
+            const userData = userSnap.data() || {};
+            const redeemedCodes = userData.redeemedCodes || {};
+            const timesUsed = redeemedCodes[code] || 0;
+
+            if (usesLeft <= 0) {
+            redeemMessage.textContent = "⚠️ This code has already been used up.";
+            redeemMessage.style.color = "#ffcc00";
+            return;
+            }
+
+            if (timesUsed >= maxPerUser) {
+            redeemMessage.textContent = "🔒 You've already redeemed this code.";
+            redeemMessage.style.color = "#ffaa00";
+            return;
+            }
+
+            const newPackCount = (Number(userData.packCount) || 0) + reward;
+            redeemedCodes[code] = timesUsed + 1;
+
+            await Promise.all([
+            userRef.set({
+                packCount: newPackCount,
+                redeemedCodes: redeemedCodes
+            }, { merge: true }),
+
+            codeRef.update({
+                usesLeft: usesLeft - 1
+            })
+            ]);
+
+            document.getElementById("packsLeft").textContent = `📦 Packs Left: ${newPackCount}`;
+            redeemMessage.textContent = `✅ Code redeemed! You received ${reward} pack${reward > 1 ? "s" : ""}.`;
+            redeemMessage.style.color = "#00ff99";
+            input.value = "";
+        } catch (err) {
+            console.error("Error redeeming code:", err);
+            redeemMessage.textContent = "❌ An error occurred while redeeming the code.";
+            redeemMessage.style.color = "#ff4444";
+        }
+        }
+
+        
+
+  </script>
+  
+</body>
+</html>

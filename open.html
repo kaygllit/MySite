@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GLLIT TV – Open Your Pack</title>
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background-color: #CB9DF0;
+      font-family: 'berk', sans-serif;
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-family: 'berk', sans-serif;
+      padding: 10px 20px;
+      background-color: #ff77c6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #ff52b7;
+    }
+
+    #card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .card {
+      background-color: #fff;
+      color: #000;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px;
+      width: 180px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .rarity {
+      font-weight: bold;
+    }
+
+    .rarity.common {
+      color: #aaa;
+    }
+
+    .rarity.rare {
+      color: #4287f5;
+    }
+
+    .rarity.epic {
+      color: #c97fff;
+    }
+
+    .rarity.legendary {
+      color: #ffcc00;
+    }
+
+    .rarity.mythic {
+      color: #ff00ff;
+      animation: glow 1s infinite alternate;
+    }
+
+      @keyframes glow {
+        from { text-shadow: 0 0 5px #ff00ff; }
+        to   { text-shadow: 0 0 15px #ff66ff; }
+      }
+
+      .card.mythic-border {
+      box-shadow: 0 0 20px #ff00ff;
+      border: 2px solid #ff66ff;
+    }
+
+
+
+    .quantity-badge {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background-color: #ff77c6;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎁 Open Your Daily GLLIT Photo Pack</h1>
+  <div id="message"></div>
+  <button id="openBtn">Open Pack</button>
+
+  <div id="card-container"></div>
+
+  <div style="margin-top: 30px;">
+    <button onclick="window.location.href='cardcollection.html'">📂 View Collection</button>
+    <button onclick="resetDaily()">🧪 Reset Daily (Debug)</button>
+  </div>
+
+  <script>
+    //CARDS LIST
+
+    const CARDS = [
+      { name: "Wonhee", set: "Debut", rarity: "common", image: "cards/WONHEE_TEST.png" },
+      { name: "Minju", set: "Debut", rarity: "rare", image: "cards/MINJU_TEST.png" },
+      { name: "Moka", set: "Debut", rarity: "legendary", image: "cards/MOKA_TEST.png" },
+      { name: "Special GLLIT", set: "Mythic Drop", rarity: "mythic", image: "cards/MYTHIC_CARD.gif" }
+    ];
+
+    const PACK_SIZE = 3;
+
+    function hasOpenedToday() {
+      const lastOpen = localStorage.getItem("lastPackOpen");
+      if (!lastOpen) return false;
+      return lastOpen === new Date().toDateString();
+    }
+
+    function markOpenedToday() {
+      localStorage.setItem("lastPackOpen", new Date().toDateString());
+    }
+
+    function saveToCollection(cards) {
+      let existing = JSON.parse(localStorage.getItem("collectedCards")) || {};
+
+      cards.forEach(card => {
+        const key = `${card.name.trim()}::${card.set.trim()}::${card.rarity.trim()}::${card.image.trim()}`;
+        if (existing[key]) {
+          existing[key].count += 1;
+        } else {
+          existing[key] = { ...card, count: 1 };
+        }
+      });
+
+      localStorage.setItem("collectedCards", JSON.stringify(existing));
+    }
+
+    function openPack() {
+      if (hasOpenedToday()) {
+        document.getElementById("message").textContent = "You've already opened a pack today! Come back tomorrow ✨";
+        return;
+      }
+
+          const rarityChances = [
+      { rarity: "mythic",    weight: 1 },
+      { rarity: "legendary", weight: 5 },
+      { rarity: "epic",      weight: 10 },
+      { rarity: "rare",      weight: 25 },
+      { rarity: "common",    weight: 59 }
+    ];
+
+    const rarityPools = {
+      common: CARDS.filter(c => c.rarity === "common"),
+      rare: CARDS.filter(c => c.rarity === "rare"),
+      epic: CARDS.filter(c => c.rarity === "epic"),
+      legendary: CARDS.filter(c => c.rarity === "legendary"),
+      mythic: CARDS.filter(c => c.rarity === "mythic")
+    };
+      function getRandomRarity() {
+        const total = rarityChances.reduce((sum, r) => sum + r.weight, 0);
+        let roll = Math.random() * total;
+        for (const entry of rarityChances) {
+          if (roll < entry.weight) return entry.rarity;
+          roll -= entry.weight;
+        }
+        return "common"; // fallback
+      }
+
+      // Step 3: Pull cards based on rarity chances
+      const pulled = [];
+      let attempts = 0;
+
+      while (pulled.length < PACK_SIZE && attempts < 100) {
+        const rarity = getRandomRarity();
+        const pool = rarityPools[rarity];
+        if (pool.length === 0) {
+          attempts++;
+          continue; // no cards of that rarity
+        }
+        const chosen = pool[Math.floor(Math.random() * pool.length)];
+        pulled.push({ ...chosen });
+        attempts++;
+      }
+
+      saveToCollection(pulled);
+      markOpenedToday();
+      displayCards(pulled);
+    }
+
+
+    function displayCards(cards) {
+      const container = document.getElementById("card-container");
+      container.innerHTML = "";
+      document.getElementById("message").textContent = `You got ${cards.length} card${cards.length > 1 ? "s" : ""}! 🎉`;
+
+      cards.forEach(card => {
+        const cardEl = document.createElement("div");
+        cardEl.className = "card";
+        cardEl.innerHTML = `
+        <img src="${card.image}" alt="${card.name}">
+        <p><strong>${card.name}</strong><br>
+        Set: ${card.set}<br>
+        Rarity: <span class="rarity ${card.rarity.toLowerCase()}">${card.rarity}</span></p>
+      `;
+
+        container.appendChild(cardEl);
+      });
+    }
+
+    if (card.rarity === "mythic") {
+      cardEl.classList.add("mythic-border");
+    }
+
+
+    function resetDaily() {
+      localStorage.removeItem("lastPackOpen");
+      document.getElementById("message").textContent = "✅ Daily open reset for testing!";
+      document.getElementById("card-container").innerHTML = "";
+    }
+
+    document.getElementById("openBtn").addEventListener("click", openPack);
+  </script>
+</body>
+</html>

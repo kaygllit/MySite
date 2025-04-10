@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ILLITville – Your Collection</title>
+  <style>
+    @font-face {
+      font-family: 'berk';
+      src: url('kkberkbm.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background-color: #000;
+      font-family: 'berk', sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+
+    .banner {
+      width: 100%;
+      height: 300px;
+      background-image: url('iv/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .logo {
+      width: 250px;
+      max-width: 90%;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #fff;
+      margin-top: 10px;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .navbar {
+      width: 100%;
+      height: 70px;
+      background-image: url('iv/starpattern1.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-items {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+
+    .nav-items li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-items li a,
+    .nav-items li img {
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-items li a:hover {
+      color: #ff77c6;
+    }
+
+    .nav-icon {
+      height: 40px;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: #ff77c6;
+      margin: 40px 0 20px;
+    }
+
+    #sort-wrapper {
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 800px;
+    }
+
+    select, input {
+      padding: 8px 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      background-color: #ff77c6;
+      color: white;
+      font-family: 'berk', sans-serif;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      box-shadow: 0 0 5px #ffb8e0;
+    }
+
+    #card-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 30px auto;
+      justify-items: center;
+    }
+
+    .card {
+      background-color: #333333;
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      width: 180px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card-name-box {
+      background-color: #ff77c6;
+      color: white;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      display: inline-block;
+    }
+
+    .card-name-box.mythic {
+      background: linear-gradient(270deg, #ffd700, #ff9900, #ffd700);
+      background-size: 400% 400%;
+      animation: mythic-glow 4s ease infinite;
+      color: #fff;
+      border: 2px solid #fff8b0;
+      box-shadow: 0 0 10px #ffd700;
+    }
+
+    @keyframes mythic-glow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card.mythic-border {
+      border: 2px solid #ffda6b;
+      animation: mythic-glow-box 4s ease infinite;
+      box-shadow: 0 0 15px 4px #ffda6b;
+    }
+
+    @keyframes mythic-glow-box {
+      0%, 100% {
+        box-shadow: 0 0 10px #ffd700, 0 0 20px #ff9900;
+        border-color: #ffd700;
+      }
+      50% {
+        box-shadow: 0 0 20px #ffcc33, 0 0 40px #ffaa00;
+        border-color: #ff9900;
+      }
+    }
+
+    .rarity {
+      font-weight: bold;
+    }
+
+    .rarity.common    { color: #aaa; }
+    .rarity.rare      { color: #4287f5; }
+    .rarity.epic      { color: #c97fff; }
+    .rarity.legendary { color: #ffcc00; }
+    .rarity.mythic    {
+      color: #ffa600;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ffd700; }
+      to   { text-shadow: 0 0 15px #ff9900; }
+    }
+
+    .card-details {
+      font-size: 14px;
+      color: #fff;
+      line-height: 1.4;
+    }
+
+    .quantity-badge {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background-color: #ff77c6;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button {
+      font-family: 'berk', sans-serif;
+      padding: 10px 20px;
+      background-color: #ff77c6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+    }
+
+    button:hover {
+      background-color: #ff52b7;
+    }
+
+    .site-footer {
+      margin-top: 60px;
+      padding: 30px 20px;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    .footer-divider {
+      height: 2px;
+      background-color: #fff;
+      opacity: 0.2;
+      margin: 0 auto 30px auto;
+      width: 80%;
+    }
+
+    .footer-content a {
+      color: #ff77c6;
+      text-decoration: none;
+    }
+
+    .footer-content a:hover {
+      text-decoration: underline;
+    }
+
+    #support-id {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 10px;
+    }
+  </style>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <header class="banner">
+    <div class="banner-overlay">
+      <img src="tv.png" alt="ILLITville Logo" class="logo" />
+      <p class="subtitle">Powered by r/ILLIT | Managed by u/Indra-kun & u/BigGamingGamer0</p>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <ul class="nav-items">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html">Wiki</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="members.html">New GLLIT</a></li>
+      <li><a href="misc.html">Misc.</a></li>
+      <li><a href="tv.html"><img src="tv-light.png" alt="TV" class="nav-icon" /></a></li>
+      <li><a href="cardopen.html"><img src="iv/cardlogo.png" alt="Cards" class="nav-icon" /></a></li>
+    </ul>
+  </nav>
+
+  <h1>📂 Your Collection</h1>
+
+  <div id="sort-wrapper">
+    <label for="sortSelect">Sort By:</label>
+    <select id="sortSelect">
+      <option value="name-asc">Name (A–Z)</option>
+      <option value="name-desc">Name (Z–A)</option>
+      <option value="rarity-high">Rarity (Mythic → Common)</option>
+      <option value="rarity-low">Rarity (Common → Mythic)</option>
+      <option value="quantity-desc">Quantity (Most → Least)</option>
+      <option value="quantity-asc">Quantity (Least → Most)</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Search cards...">
+  </div>
+
+  <div id="card-container">Loading your cards...</div>
+  <button onclick="window.location.href='cardopen.html'">🏱 Open a Pack</button>
+  <p id="support-id"></p>
+  <button id="googleSignInBtn">🔐 Sign in with Google</button>
+  <button id="logoutBtn" style="display:none;">🚪 Log Out</button>
+  
+
+  <footer class="site-footer">
+    <div class="footer-divider"></div>
+    <div class="footer-content">
+      <p><strong>ILLITville</strong> is a fan-created site dedicated to ILLIT. Powered by r/ILLIT and managed by fans for fans.</p>
+      <p style="font-size: 12px; opacity: 0.6;">© 2025 ILLITville – All images and content belong to their respective owners.</p>
+    </div>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1C-Jr6CAI0zd4jUi0chDur6CPVUoAxeo",
+      authDomain: "gllittv.firebaseapp.com",
+      projectId: "gllittv"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    let currentUserId = null;
+  
+    function generateSupportId() {
+      const prefix = "GLT";
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      return `${prefix}-${randomNum}`;
+    }
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+    document.getElementById("googleSignInBtn").addEventListener("click", () => {
+      auth.signInWithPopup(provider).catch(console.error);
+    });
+    
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        currentUserId = user.uid;
+
+        // 🔒 HIDE sign-in button
+        document.getElementById("googleSignInBtn").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "inline-block";
+
+        // ✅ Fetch user data
+        const userRef = db.collection("users").doc(currentUserId);
+        const doc = await userRef.get();
+        let supportId = doc.data()?.supportId;
+
+        if (!supportId) {
+          supportId = generateSupportId();
+          await userRef.set({ supportId }, { merge: true });
+        }
+
+        document.getElementById("support-id").textContent = `🆔 Support ID: ${supportId}`;
+
+        const collection = doc.data()?.collection || {};
+        renderCollection(collection);
+      } else {
+        currentUserId = null;
+
+        // 🔓 SHOW sign-in button if logged out
+        document.getElementById("googleSignInBtn").style.display = "inline-block";
+        document.getElementById("logoutBtn").style.display = "none";
+
+        document.getElementById("support-id").textContent = "Sign in to view your collection.";
+        document.getElementById("card-container").innerHTML = "";
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      auth.signOut()
+        .then(() => {
+          console.log("User signed out");
+          location.reload(); // Refresh page to reset UI
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+        });
+    });
+
+  
+    function renderCollection(cards) {
+      const container = document.getElementById("card-container");
+      container.innerHTML = "";
+  
+      const sortValue = document.getElementById("sortSelect").value;
+      const searchValue = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  
+      const rarityOrder = {
+        "mythic": 4,
+        "legendary": 3,
+        "epic": 2,
+        "rare": 1,
+        "common": 0
+      };
+  
+      let cardArray = Object.keys(cards).map(key => cards[key]);
+  
+      if (searchValue) {
+        cardArray = cardArray.filter(card => card.name.toLowerCase().includes(searchValue));
+      }
+  
+      cardArray.sort((a, b) => {
+        switch (sortValue) {
+          case "name-asc": return a.name.localeCompare(b.name);
+          case "name-desc": return b.name.localeCompare(a.name);
+          case "rarity-high": return rarityOrder[b.rarity] - rarityOrder[a.rarity];
+          case "rarity-low": return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+          case "quantity-desc": return (b.count || 0) - (a.count || 0);
+          case "quantity-asc": return (a.count || 0) - (b.count || 0);
+          default: return 0;
+        }
+      });
+  
+      if (cardArray.length === 0) {
+        container.innerHTML = "<p>You haven't collected any cards yet!</p>";
+        return;
+      }
+  
+      cardArray.forEach(card => {
+        const cardEl = document.createElement("div");
+        cardEl.className = "card";
+        if (card.rarity?.toLowerCase() === "mythic") {
+          cardEl.classList.add("mythic-border");
+        }
+  
+        const isMythic = card.rarity?.toLowerCase() === "mythic";
+        const nameClass = isMythic ? "card-name-box mythic" : "card-name-box";
+  
+        cardEl.innerHTML = `
+          <div class="quantity-badge">x${card.count || 1}</div>
+          <img src="${card.image}" alt="${card.name}">
+          <p><span class="${nameClass}">${card.name}</span></p>
+          <div class="card-details">
+            Set: ${card.set}<br>
+            Rarity: <span class="rarity ${card.rarity.toLowerCase()}">${card.rarity}</span>
+          </div>
+        `;
+  
+        container.appendChild(cardEl);
+      });
+    }
+  
+    document.getElementById("sortSelect").addEventListener("change", async () => {
+      const userDoc = await db.collection("users").doc(currentUserId).get();
+      const collection = userDoc.data()?.collection || {};
+      renderCollection(collection);
+    });
+  
+    document.getElementById("searchInput").addEventListener("input", async () => {
+      const userDoc = await db.collection("users").doc(currentUserId).get();
+      const collection = userDoc.data()?.collection || {};
+      renderCollection(collection);
+    });
+  </script>
+  
+</body>
+</html>
