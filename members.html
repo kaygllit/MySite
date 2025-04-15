@@ -285,6 +285,72 @@
         text-align: center;
       }
     }
+
+    @media (max-width: 768px) {
+  .nav-items {
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px 0;
+    justify-content: center;
+  }
+
+  .nav-items li {
+    padding: 10px;
+    flex: 1 0 40%; /* make nav items flow nicely */
+    max-width: 120px;
+  }
+
+  .overlay {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    padding: 0 10px;
+    text-align: center;
+    white-space: nowrap;         /* 🔹 Keeps the name in one line */
+    overflow: hidden;            /* 🔹 Prevents text overflow */
+    text-overflow: ellipsis;     /* 🔹 Adds "..." if needed */
+    max-width: 90vw;             /* 🔹 Ensures it doesn’t overflow screen */
+  }
+
+  .profile-content {
+    padding: 20px 10px;
+    font-size: 15px;
+  }
+
+  .fun-facts {
+    padding-left: 10px;
+  }
+
+  .fun-facts li {
+    font-size: 14px;
+  }
+
+  .member-profile {
+    overflow-x: hidden;
+  }
+
+  .pixel-heading {
+    font-size: 22px;
+  }
+
+  .profile-info p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .quote {
+    font-size: 14px;
+  }
+
+  .profile-pic {
+    max-width: 100%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
   </style>
 </head>
 <body>
