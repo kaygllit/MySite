@@ -742,32 +742,30 @@
     function openProfileById(id) {
       const block = document.getElementById(id);
       if (block && block.classList.contains("member-block")) {
-        // Close all others
-        document.querySelectorAll('.member-block').forEach(b => {
-          b.classList.remove('active');
-        });
-  
-        // Activate the target
+        // Close all
+        document.querySelectorAll(".member-block").forEach(b => b.classList.remove("active"));
         block.classList.add("active");
   
-        // Scroll after a short delay
+        // Scroll slightly after ensuring it's visible
         setTimeout(() => {
           const yOffset = -100;
           const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }, 100);
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 150); // Delay ensures DOM is ready
       }
     }
   
-    // When page loads, check for anchor
-    document.addEventListener("DOMContentLoaded", () => {
-      if (window.location.hash) {
-        const anchor = window.location.hash.substring(1); // remove #
-        openProfileById(anchor);
+    // Wait until everything is fully loaded
+    window.addEventListener("load", () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const anchor = hash.substring(1);
+        // Wait a bit more in case of image loading layout shifts
+        setTimeout(() => openProfileById(anchor), 100);
       }
     });
   
-    // Also handle header click logic
+    // Regular click handler
     document.querySelectorAll(".member-header").forEach(header => {
       header.addEventListener("click", () => {
         const block = header.parentElement;
@@ -778,7 +776,6 @@
         if (!isOpen) {
           block.classList.add("active");
   
-          // Optional scroll logic when clicked
           setTimeout(() => {
             const yOffset = 500;
             const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -788,6 +785,7 @@
       });
     });
   </script>
+  
   
   
   <script>
