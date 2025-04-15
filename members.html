@@ -285,6 +285,69 @@
         text-align: center;
       }
     }
+
+    @media (max-width: 768px) {
+  .nav-items {
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px 0;
+    justify-content: center;
+  }
+
+  .nav-items li {
+    padding: 10px;
+    flex: 1 0 40%; /* make nav items flow nicely */
+    max-width: 120px;
+  }
+
+  .overlay {
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 0 10px;
+    word-break: break-word;
+  }
+
+  .profile-content {
+    padding: 20px 10px;
+    font-size: 15px;
+  }
+
+  .fun-facts {
+    padding-left: 10px;
+  }
+
+  .fun-facts li {
+    font-size: 14px;
+  }
+
+  .member-profile {
+    overflow-x: hidden;
+  }
+
+  .pixel-heading {
+    font-size: 22px;
+  }
+
+  .profile-info p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .quote {
+    font-size: 14px;
+  }
+
+  .profile-pic {
+    max-width: 100%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
   </style>
 </head>
 <body>
