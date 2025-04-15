@@ -348,6 +348,32 @@
   .navbar {
     flex-direction: column;
     height: auto;
+    padding: 10px 0;
+  }
+
+  .nav-items {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .nav-items li {
+    flex: 1 1 40%;
+    max-width: 130px;
+    padding: 10px 5px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-items li a,
+  .nav-items li img {
+    font-size: 16px;
+    text-align: center;
+    word-break: keep-all;
+  }
+
+  .nav-icon {
+    height: 30px; /* Reduce icon size slightly for mobile */
   }
 }
 
