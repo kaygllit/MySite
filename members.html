@@ -429,7 +429,7 @@
 
   <!-- Member List -->
   <main class="members-container">
-    <div class="member-block">
+    <div class="member-block" id="yunah">
       <div class="member-header">
         <img src="iv/Yunah_Member.png" alt="Yunah">
         <div class="overlay">Yunah</div>
@@ -492,7 +492,7 @@
           <img src="iv/Minju_Member.png" alt="Minju">
           <div class="overlay">Minju</div>
         </div>
-        <div class="member-profile">
+        <div class="member-profile" id="minju">
           <div class="profile-content">
             <div class="profile-top">
               <img src="iv/Minju_Profile.png" alt="Minju" class="profile-pic">
@@ -545,7 +545,7 @@
         </div>
       </div>
       
-      <div class="member-block">
+      <div class="member-block" id="moka">
         <div class="member-header">
           <img src="iv/Moka_Member.png" alt="Moka">
           <div class="overlay">Moka</div>
@@ -606,7 +606,7 @@
         </div>
       </div>
       
-      <div class="member-block">
+      <div class="member-block" id="wonhee">
         <div class="member-header">
           <img src="iv/Wonhee_Member.png" alt="Wonhee">
           <div class="overlay">Wonhee</div>
@@ -663,7 +663,7 @@
         </div>
       </div>
 
-      <div class="member-block">
+      <div class="member-block" id="iroha">
         <div class="member-header">
           <img src="iv/Iroha_Member.png" alt="Iroha">
           <div class="overlay">Iroha</div>
@@ -762,6 +762,24 @@
         }
       });
     });
+
+
+   
+  document.addEventListener("DOMContentLoaded", () => {
+    const hash = window.location.hash;
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target && target.classList.contains('member-block')) {
+        target.classList.add('active');
+
+        // Optional: auto-scroll a bit lower to reveal profile cleanly
+        setTimeout(() => {
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 100;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  });
 
 
     
