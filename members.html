@@ -205,7 +205,7 @@
     }
   
     .member-block.active .member-profile {
-      max-height: 2000px;
+      max-height: 9999px;
     }
   
     .profile-content {
@@ -772,6 +772,32 @@
       const mobileMenu = document.querySelector('.mobile-nav-items');
       mobileMenu.classList.toggle('active');
     }
+
+    document.querySelectorAll('.member-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const block = header.parentElement;
+      const profile = block.querySelector('.member-profile');
+      const isOpen = block.classList.contains('active');
+
+      // Close all
+      document.querySelectorAll('.member-block').forEach(b => {
+        b.classList.remove('active');
+        b.querySelector('.member-profile').classList.remove('open');
+      });
+
+      if (!isOpen) {
+        block.classList.add('active');
+        profile.classList.add('open');
+
+        setTimeout(() => {
+          const yOffset = 500;
+          const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }, 150);
+      }
+    });
+  });
+
   </script>
   
   
