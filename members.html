@@ -739,51 +739,56 @@
 
   <!-- Member Script -->
   <script>
-    document.querySelectorAll('.member-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const block = header.parentElement;
-        const isOpen = block.classList.contains('active');
+    function openProfileById(id) {
+      const block = document.getElementById(id);
+      if (block && block.classList.contains("member-block")) {
+        // Close all others
+        document.querySelectorAll('.member-block').forEach(b => {
+          b.classList.remove('active');
+        });
   
-        // Close all profiles
-        document.querySelectorAll('.member-block').forEach(b => b.classList.remove('active'));
+        // Activate the target
+        block.classList.add("active");
   
-        if (!isOpen) {
-          block.classList.add('active');
-  
-          setTimeout(() => {
-            const yOffset = 500; // positive now: scrolls further down
-            const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
-  
-            window.scrollTo({
-              top: y,
-              behavior: 'smooth'
-            });
-          }, 150);
-        }
-      });
-    });
-
-
-   
-  document.addEventListener("DOMContentLoaded", () => {
-    const hash = window.location.hash;
-    if (hash) {
-      const target = document.querySelector(hash);
-      if (target && target.classList.contains('member-block')) {
-        target.classList.add('active');
-
-        // Optional: auto-scroll a bit lower to reveal profile cleanly
+        // Scroll after a short delay
         setTimeout(() => {
-          const y = target.getBoundingClientRect().top + window.pageYOffset - 100;
+          const yOffset = -100;
+          const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }, 100);
       }
     }
-  });
-
-
-    
+  
+    // When page loads, check for anchor
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.location.hash) {
+        const anchor = window.location.hash.substring(1); // remove #
+        openProfileById(anchor);
+      }
+    });
+  
+    // Also handle header click logic
+    document.querySelectorAll(".member-header").forEach(header => {
+      header.addEventListener("click", () => {
+        const block = header.parentElement;
+        const isOpen = block.classList.contains("active");
+  
+        document.querySelectorAll(".member-block").forEach(b => b.classList.remove("active"));
+  
+        if (!isOpen) {
+          block.classList.add("active");
+  
+          // Optional scroll logic when clicked
+          setTimeout(() => {
+            const yOffset = 500;
+            const y = block.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: "smooth" });
+          }, 150);
+        }
+      });
+    });
   </script>
+  
   
   <script>
     function toggleMobileMenu() {
